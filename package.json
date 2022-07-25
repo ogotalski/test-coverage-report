@@ -1,6 +1,6 @@
 {
   "name": "test-coverage-report-action",
-  "version": "0.0.1",
+  "version": "0.1",
   "description": "Github action creates comment with test coverage report in the Pull Request",
   "main": "index.js",
   "scripts": {
