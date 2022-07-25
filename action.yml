@@ -1,13 +1,30 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Test coverage report'
+description: 'Creates comment with test coverage report in the Pull Request'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  htmlReports:
+    description: "Comma separated paths of the jacoco html coverage pages"
     required: true
     default: '1000'
-outputs:
-  time: # output will be available to future steps
-    description: 'The current time after waiting'
+  paths:
+    description: "Comma separated paths of the jacoco xml reports"
+    required: true
+  token:
+    description: "Github personal token to add commits to Pull Request"
+    required: true
+  title:
+    description: "Optional title for the Pull Request comment"
+    required: false
+    default: ":scroll: Code coverage report"
+  updateComment:
+    description: "Update comment instead of creating new one"
+    required: false
+    default: "true"
+  debug:
+    required: false
+    default: "false"
 runs:
   using: 'node16'
   main: 'dist/index.js'
+branding:
+  icon: "search"
+  color: "blue"

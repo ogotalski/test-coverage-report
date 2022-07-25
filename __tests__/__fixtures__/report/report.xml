@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN"
+        "report.dtd">
+<report name="MathUtils">
+    <sessioninfo id="alehh-ThinkPad-P15v-Gen-2i-d34221c9" start="1658757057847" dump="1658757058176"/>
+    <package name="org/test/math/utils">
+        <class name="org/test/math/utils/FibonacciUtil" sourcefilename="FibonacciUtil.java"/>
+        <class name="org/test/math/utils/FibonacciRecurUtil" sourcefilename="FibonacciRecurUtil.java">
+            <method name="&lt;init&gt;" desc="()V" line="6">
+                <counter type="INSTRUCTION" missed="0" covered="8"/>
+                <counter type="LINE" missed="0" covered="2"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="calc" desc="(J)J" line="12">
+                <counter type="INSTRUCTION" missed="0" covered="38"/>
+                <counter type="BRANCH" missed="0" covered="4"/>
+                <counter type="LINE" missed="0" covered="4"/>
+                <counter type="COMPLEXITY" missed="0" covered="3"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="0" covered="46"/>
+            <counter type="BRANCH" missed="0" covered="4"/>
+            <counter type="LINE" missed="0" covered="6"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="org/test/math/utils/MathUtils" sourcefilename="MathUtils.java">
+            <method name="&lt;init&gt;" desc="()V" line="3">
+                <counter type="INSTRUCTION" missed="3" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="fibonacciCalc" desc="(J)Ljava/lang/Long;" line="7">
+                <counter type="INSTRUCTION" missed="7" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="10" covered="0"/>
+            <counter type="LINE" missed="2" covered="0"/>
+            <counter type="COMPLEXITY" missed="2" covered="0"/>
+            <counter type="METHOD" missed="2" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="org/test/math/utils/FibonacciParallelUtil" sourcefilename="FibonacciParallelUtil.java">
+            <method name="&lt;init&gt;" desc="()V" line="6">
+                <counter type="INSTRUCTION" missed="7" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="calc" desc="(J)J" line="12">
+                <counter type="INSTRUCTION" missed="32" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="5" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="lambda$calc$1" desc="(J)Ljava/lang/Long;" line="15">
+                <counter type="INSTRUCTION" missed="7" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="lambda$calc$0" desc="(J)Ljava/lang/Long;" line="14">
+                <counter type="INSTRUCTION" missed="7" covered="0"/>
+                <counter type="LINE" missed="1" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="53" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="7" covered="0"/>
+            <counter type="COMPLEXITY" missed="5" covered="0"/>
+            <counter type="METHOD" missed="4" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="org/test/math/utils/FibonacciForkJoinUtil$FibonacciTask"
+               sourcefilename="FibonacciForkJoinUtil.java">
+            <method name="&lt;init&gt;" desc="(Lorg/test/math/utils/FibonacciForkJoinUtil;Ljava/lang/Long;)V" line="22">
+                <counter type="INSTRUCTION" missed="9" covered="0"/>
+                <counter type="LINE" missed="3" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="compute" desc="()Ljava/lang/Long;" line="28">
+                <counter type="INSTRUCTION" missed="46" covered="0"/>
+                <counter type="BRANCH" missed="2" covered="0"/>
+                <counter type="LINE" missed="5" covered="0"/>
+                <counter type="COMPLEXITY" missed="2" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="55" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="8" covered="0"/>
+            <counter type="COMPLEXITY" missed="3" covered="0"/>
+            <counter type="METHOD" missed="2" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <class name="org/test/math/utils/FibonacciLinearUtil" sourcefilename="FibonacciLinearUtil.java">
+            <method name="&lt;init&gt;" desc="()V" line="3">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="calc" desc="(J)J" line="6">
+                <counter type="INSTRUCTION" missed="0" covered="31"/>
+                <counter type="BRANCH" missed="0" covered="4"/>
+                <counter type="LINE" missed="0" covered="9"/>
+                <counter type="COMPLEXITY" missed="0" covered="3"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="0" covered="34"/>
+            <counter type="BRANCH" missed="0" covered="4"/>
+            <counter type="LINE" missed="0" covered="10"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <class name="org/test/math/utils/FibonacciForkJoinUtil" sourcefilename="FibonacciForkJoinUtil.java">
+            <method name="&lt;init&gt;" desc="()V" line="5">
+                <counter type="INSTRUCTION" missed="7" covered="0"/>
+                <counter type="LINE" missed="2" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <method name="calc" desc="(J)J" line="12">
+                <counter type="INSTRUCTION" missed="18" covered="0"/>
+                <counter type="LINE" missed="3" covered="0"/>
+                <counter type="COMPLEXITY" missed="1" covered="0"/>
+                <counter type="METHOD" missed="1" covered="0"/>
+            </method>
+            <counter type="INSTRUCTION" missed="25" covered="0"/>
+            <counter type="LINE" missed="5" covered="0"/>
+            <counter type="COMPLEXITY" missed="2" covered="0"/>
+            <counter type="METHOD" missed="2" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </class>
+        <sourcefile name="MathUtils.java">
+            <line nr="3" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="7" mi="7" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="10" covered="0"/>
+            <counter type="LINE" missed="2" covered="0"/>
+            <counter type="COMPLEXITY" missed="2" covered="0"/>
+            <counter type="METHOD" missed="2" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </sourcefile>
+        <sourcefile name="FibonacciLinearUtil.java">
+            <line nr="3" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="6" mi="0" ci="4" mb="0" cb="2"/>
+            <line nr="7" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="8" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="9" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="11" mi="0" ci="11" mb="0" cb="2"/>
+            <line nr="12" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="13" mi="0" ci="4" mb="0" cb="0"/>
+            <line nr="14" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="16" mi="0" ci="2" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="0" covered="34"/>
+            <counter type="BRANCH" missed="0" covered="4"/>
+            <counter type="LINE" missed="0" covered="10"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="FibonacciRecurUtil.java">
+            <line nr="6" mi="0" ci="2" mb="0" cb="0"/>
+            <line nr="8" mi="0" ci="6" mb="0" cb="0"/>
+            <line nr="12" mi="0" ci="6" mb="0" cb="2"/>
+            <line nr="13" mi="0" ci="6" mb="0" cb="2"/>
+            <line nr="15" mi="0" ci="18" mb="0" cb="0"/>
+            <line nr="17" mi="0" ci="8" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="0" covered="46"/>
+            <counter type="BRANCH" missed="0" covered="4"/>
+            <counter type="LINE" missed="0" covered="6"/>
+            <counter type="COMPLEXITY" missed="0" covered="4"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <sourcefile name="FibonacciParallelUtil.java">
+            <line nr="6" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="8" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="12" mi="6" ci="0" mb="2" cb="0"/>
+            <line nr="14" mi="22" ci="0" mb="0" cb="0"/>
+            <line nr="15" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="16" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="17" mi="5" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="53" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="7" covered="0"/>
+            <counter type="COMPLEXITY" missed="5" covered="0"/>
+            <counter type="METHOD" missed="4" covered="0"/>
+            <counter type="CLASS" missed="1" covered="0"/>
+        </sourcefile>
+        <sourcefile name="FibonacciForkJoinUtil.java">
+            <line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="7" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="12" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="13" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="14" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="22" mi="5" ci="0" mb="0" cb="0"/>
+            <line nr="23" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="24" mi="1" ci="0" mb="0" cb="0"/>
+            <line nr="28" mi="9" ci="0" mb="2" cb="0"/>
+            <line nr="29" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="30" mi="3" ci="0" mb="0" cb="0"/>
+            <line nr="31" mi="12" ci="0" mb="0" cb="0"/>
+            <line nr="32" mi="10" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="80" covered="0"/>
+            <counter type="BRANCH" missed="2" covered="0"/>
+            <counter type="LINE" missed="13" covered="0"/>
+            <counter type="COMPLEXITY" missed="5" covered="0"/>
+            <counter type="METHOD" missed="4" covered="0"/>
+            <counter type="CLASS" missed="2" covered="0"/>
+        </sourcefile>
+        <sourcefile name="FibonacciUtil.java"/>
+        <counter type="INSTRUCTION" missed="143" covered="80"/>
+        <counter type="BRANCH" missed="4" covered="8"/>
+        <counter type="LINE" missed="22" covered="16"/>
+        <counter type="COMPLEXITY" missed="12" covered="8"/>
+        <counter type="METHOD" missed="10" covered="4"/>
+        <counter type="CLASS" missed="4" covered="2"/>
+    </package>
+    <counter type="INSTRUCTION" missed="143" covered="80"/>
+    <counter type="BRANCH" missed="4" covered="8"/>
+    <counter type="LINE" missed="22" covered="16"/>
+    <counter type="COMPLEXITY" missed="12" covered="8"/>
+    <counter type="METHOD" missed="10" covered="4"/>
+    <counter type="CLASS" missed="4" covered="2"/>
+</report>

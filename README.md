@@ -1,116 +1,109 @@
-# Create a JavaScript Action
+# Test coverage report
 
 <p align="center">
-  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
+  <a href="https://github.com/ogotalski/test-coverage-report/actions"><img alt="javscript-action status" src="https://github.com/ogotalski/test-coverage-report/workflows/units-test/badge.svg"></a>
 </p>
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+Creates comment with test coverage report in the Pull Request based on JaCoCo html and xml reports :rocket:
 
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+### Code coverage report
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+#### :open_file_folder: 39.36% of the overall code covered by tests.
+#### :inbox_tray: 22.78% of the files changed in pr covered by tests.
+---
+##### Details:
+<details><summary>org.test.main.<b>Math.kt</b> - <b>75%</b></summary>
 
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-Install the dependencies
-
-```bash
-npm install
+```diff
+# 01: package org.test.main
+# 02: 
+# 03: 
+# 04: import org.test.math.utils.MathUtils
+# 05: 
++ 06:  class Math {
+# 07:     fun getFibonacci(int: Int): Long {
+! 08:          if (int > 1)
++ 09:              return MathUtils().fibonacciCalc(int.toLong())
+- 10:          if (int < 0)
+- 11:              return 0L
+- 12:          return -1L
+# 13:         }
+# 14: }
+# 15: 
 ```
+[org.test.main.Math.kt](https://github.com/ogotalski/test/blob/d11bf3fdc689362cbd24dad2e54cf3cdf3f36a78/src%2Fmain%2Fkotlin%2Forg%2Ftest%2Fmain%2FMath.kt)
 
-Run the tests :heavy_check_mark:
+<hr/></details>
 
-```bash
-$ npm test
+<details><summary>org.test.math.utils.<b>FibonacciParallelUtil.java</b> - <b>0%</b></summary>
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-...
+```diff
+# 01: package org.test.math.utils;
+# 02: 
+# 03: import java.util.concurrent.ExecutorService;
+# 04: import java.util.concurrent.Executors;
+# 05: 
+- 06:  public class FibonacciParallelUtil implements FibonacciUtil {
+# 07: 
+- 08:      ExecutorService executorService = Executors.newFixedThreadPool(5);
+# 09: 
+# 10:     @Override
+# 11:     public long calc(long number) {
+- 12:          if (number <= 2) return 0;
+# 13:         try {
+- 14:              long result = executorService.submit(() -> calc(number - 1)).get() +
+- 15:                      executorService.submit(() -> calc(number - 2)).get();
+- 16:              return result;
+- 17:          } catch (Exception e) {
+- 18:              throw new RuntimeException(e);
+# 19:         }
+# 20:     }
+# 21: }
+# 22: 
 ```
+[org.test.math.utils.FibonacciParallelUtil.java](https://github.com/ogotalski/test/blob/d11bf3fdc689362cbd24dad2e54cf3cdf3f36a78/MathUtils%2Fsrc%2Fmain%2Fjava%2Forg%2Ftest%2Fmath%2Futils%2FFibonacciParallelUtil.java)
 
-## Change action.yml
+<hr/></details>
 
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-const core = require('@actions/core');
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Package for distribution
-
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run prepare
-
-```bash
-npm run prepare
-```
-
-Since the packaged index.js is run from the dist folder.
-
-```bash
-git add dist
-```
-
-## Create a release branch
-
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
-
-Checkin to the v1 release branch
-
-```bash
-git checkout -b v1
-git commit -a -m "v1 release"
-```
-
-```bash
-git push origin v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
 
 ## Usage
 
-You can now consume the action by referencing the v1 branch
 
 ```yaml
-uses: actions/javascript-action@v1
-with:
-  milliseconds: 1000
+uses: ogotalski/test-coverage-report@v1.0
+  with:
+    paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+    htmlReports: ${{ github.workspace }}/build/jacocoHtml,${{ github.workspace }}/MathUtils/build/jacocoHtml
+    title: "Code coverage report"
+    updateComment: true
+    token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+## Example of workflow
+```
+name: Measure coverage
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Run Coverage
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+      - name: Test coverage report
+        uses: ogotalski/test-coverage-report@v1.0
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+          htmlReports: ${{ github.workspace }}/build/jacocoHtml,${{ github.workspace }}/MathUtils/build/jacocoHtml
+          token: ${{ secrets.GITHUB_TOKEN }}
+```
+See the [actions tab](https://github.com/ogotalski/test/actions) for runs of this action! :rocket:
