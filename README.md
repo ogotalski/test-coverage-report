@@ -76,7 +76,7 @@ Run prepare
 npm run prepare
 ```
 
-Since the packaged index.js is run from the dist folder.
+Since the packaged action.js is run from the dist folder.
 
 ```bash
 git add dist
