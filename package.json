@@ -1,10 +1,10 @@
 {
   "name": "test-coverage-report-action",
-  "version": "0.0.1",
+  "version": "0.1",
   "description": "Github action creates comment with test coverage report in the Pull Request",
   "main": "index.js",
   "scripts": {
-    "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
+    "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "test": "jest --coverage",
     "all": "npm run prepare && npm run test"
   },
