@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN"
+        "report.dtd">
+<report name="TestProject">
+    <sessioninfo id="alehh-ThinkPad-P15v-Gen-2i-4b707284" start="1658757058304" dump="1658757058826"/>
+    <package name="org/test/main">
+        <class name="org/test/main/Math" sourcefilename="Math.kt">
+            <method name="&lt;init&gt;" desc="()V" line="6">
+                <counter type="INSTRUCTION" missed="0" covered="3"/>
+                <counter type="LINE" missed="0" covered="1"/>
+                <counter type="COMPLEXITY" missed="0" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <method name="getFibonacci" desc="(I)J" line="8">
+                <counter type="INSTRUCTION" missed="6" covered="15"/>
+                <counter type="BRANCH" missed="3" covered="1"/>
+                <counter type="LINE" missed="3" covered="2"/>
+                <counter type="COMPLEXITY" missed="2" covered="1"/>
+                <counter type="METHOD" missed="0" covered="1"/>
+            </method>
+            <counter type="INSTRUCTION" missed="6" covered="18"/>
+            <counter type="BRANCH" missed="3" covered="1"/>
+            <counter type="LINE" missed="3" covered="3"/>
+            <counter type="COMPLEXITY" missed="2" covered="2"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </class>
+        <sourcefile name="Math.kt">
+            <line nr="6" mi="0" ci="3" mb="0" cb="0"/>
+            <line nr="8" mi="0" ci="3" mb="1" cb="1"/>
+            <line nr="9" mi="0" ci="12" mb="0" cb="0"/>
+            <line nr="10" mi="2" ci="0" mb="2" cb="0"/>
+            <line nr="11" mi="2" ci="0" mb="0" cb="0"/>
+            <line nr="12" mi="2" ci="0" mb="0" cb="0"/>
+            <counter type="INSTRUCTION" missed="6" covered="18"/>
+            <counter type="BRANCH" missed="3" covered="1"/>
+            <counter type="LINE" missed="3" covered="3"/>
+            <counter type="COMPLEXITY" missed="2" covered="2"/>
+            <counter type="METHOD" missed="0" covered="2"/>
+            <counter type="CLASS" missed="0" covered="1"/>
+        </sourcefile>
+        <counter type="INSTRUCTION" missed="6" covered="18"/>
+        <counter type="BRANCH" missed="3" covered="1"/>
+        <counter type="LINE" missed="3" covered="3"/>
+        <counter type="COMPLEXITY" missed="2" covered="2"/>
+        <counter type="METHOD" missed="0" covered="2"/>
+        <counter type="CLASS" missed="0" covered="1"/>
+    </package>
+    <counter type="INSTRUCTION" missed="6" covered="18"/>
+    <counter type="BRANCH" missed="3" covered="1"/>
+    <counter type="LINE" missed="3" covered="3"/>
+    <counter type="COMPLEXITY" missed="2" covered="2"/>
+    <counter type="METHOD" missed="0" covered="2"/>
+    <counter type="CLASS" missed="0" covered="1"/>
+</report>

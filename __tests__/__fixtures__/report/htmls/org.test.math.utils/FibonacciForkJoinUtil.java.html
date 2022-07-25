@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FibonacciForkJoinUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MathUtils</a> &gt; <a href="index.source.html" class="el_package">org.test.math.utils</a> &gt; <span class="el_source">FibonacciForkJoinUtil.java</span></div><h1>FibonacciForkJoinUtil.java</h1><pre class="source lang-java linenums">package org.test.math.utils;
+
+import java.util.concurrent.*;
+
+<span class="nc" id="L5">public class FibonacciForkJoinUtil implements FibonacciUtil {</span>
+
+<span class="nc" id="L7">    ForkJoinPool executorService = (ForkJoinPool) Executors.newWorkStealingPool();</span>
+
+    @Override
+    public long calc(long number) {
+        try {
+<span class="nc" id="L12">            return executorService.invoke(new FibonacciTask(number));</span>
+<span class="nc" id="L13">        } catch (Exception e) {</span>
+<span class="nc" id="L14">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    private class FibonacciTask extends RecursiveTask&lt;Long&gt;
+    {
+        private Long number;
+
+<span class="nc" id="L22">        public FibonacciTask(Long number) {</span>
+<span class="nc" id="L23">            this.number = number;</span>
+<span class="nc" id="L24">        }</span>
+
+        @Override
+        protected Long compute() {
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (number &lt;= 2) return 1L;</span>
+<span class="nc" id="L29">            FibonacciTask fibonacciTask1 = new FibonacciTask(number - 1);</span>
+<span class="nc" id="L30">            fibonacciTask1.fork();</span>
+<span class="nc" id="L31">            FibonacciTask fibonacciTask2 = new FibonacciTask(number - 2);</span>
+<span class="nc" id="L32">            return fibonacciTask2.compute() + fibonacciTask1.join();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
