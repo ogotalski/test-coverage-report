@@ -1,7 +1,7 @@
 
 const core = require("@actions/core");
 const github = require("@actions/github");
-const action = require("../src/action");
+const action = require("../action");
 jest.mock("@actions/core");
 jest.mock("@actions/github");
 
