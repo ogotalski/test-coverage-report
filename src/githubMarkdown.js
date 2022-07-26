@@ -15,6 +15,8 @@ function createTotalPercentagePart(fullReport) {
 }
 
 function createPRReportPart(prReport) {
+    if (prReport.files.length ==0)
+        return "No files that require code coverage in this PR"
     return `#### :inbox_tray: ${prReport.percentage}% of the files changed in pr covered by tests.\n` +
         `---\n ##### Details:\n` +
         prReport.files.map((file) => {
