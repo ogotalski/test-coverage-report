@@ -1,13 +1,20 @@
 const fs = require("fs");
 const {log} = require("./log");
 
-function parseCounter(fileName, packageName, attr) {
+function parseCounter(fileName, packageName, lines) {
     const file = {}
     file.name = fileName;
     file.path = `${packageName}/${fileName}`
     file.package = replaceSlash(packageName)
-    file.missed = parseFloat(attr["missed"]);
-    file.covered = parseFloat(attr["covered"]);
+    file.lines = new Map(lines.map(line=>[line.number,line]))
+    let missed = 0
+    let covered = 0
+    lines.forEach((line) => {
+        missed += line.mi;
+        covered += line.ci;
+    });
+    file.missed = missed;
+    file.covered = covered;
     file.percentage = parseFloat(
         ((file.covered / (file.covered + file.missed)) * 100).toFixed(2)
     );
@@ -22,30 +29,34 @@ function merge(file, old) {
     );
 }
 
+
 function parseReports(reports) {
     const packages = [].concat(...reports.map((report) => report["report"]).map((report) => report["package"]))
     const result = {};
-    const resultFiles = new Map();
+    const resultFiles = [];
     packages.forEach((item) => {
         const packageName = item["$"].name;
         const sourceFiles = item.sourcefile;
         sourceFiles.forEach((sourceFile) => {
             const fileName = sourceFile["$"].name;
-            const counters = sourceFile["counter"];
-            if (counters)
-                counters.forEach((counter) => {
-                    const attr = counter["$"];
-                    if (attr["type"] == "INSTRUCTION") {
-                        const file = parseCounter(fileName, packageName, attr);
-                        if (resultFiles.has(file.path)) {
-                            merge(file, resultFiles.get(file.path))
-                        }
-                        resultFiles.set(file.path, file);
-                    }
+            const lines = sourceFile["line"];
+            const fileLines =[]
+            if (lines)
+                lines.forEach((l)=>{
+                    const line = l["$"]
+                    const fileLine = {}
+                    fileLine.number = parseInt(line["nr"]);
+                    fileLine.mi = parseInt(line["mi"]);
+                    fileLine.ci = parseInt(line["ci"]);
+                    fileLine.mb = parseInt(line["mb"]);
+                    fileLine.cb = parseInt(line["cb"]);
+                    fileLines.push(fileLine)
                 })
+            const file = parseCounter(fileName, packageName, fileLines);
+            resultFiles.push(file);
         });
     });
-    result.files = Array.from(resultFiles.values());
+    result.files = resultFiles
     if (result.files.length != 0) {
         result.files.sort((a, b) => b.percentage - a.percentage);
         result.percentage = getTotalPercentage(result.files);
@@ -60,15 +71,15 @@ function fileExists(filePath) {
 }
 
 
-function addHtmlReports(reports, htmlReportPaths) {
+function addSources(reports, sourcePaths) {
     reports.files.map((report) => {
-        htmlReportPaths.forEach((htmlReportPath) => {
-            let filePath = `${htmlReportPath}/${report.package}/${report.name}.html`;
+        sourcePaths.forEach((sourcePath) => {
+            let filePath = `${sourcePath}/${report.path}`;
 
             let fileExists1 = fileExists(filePath);
             log(`file: ${filePath} - ${fileExists1}`)
             if (fileExists1) {
-                report.htmlReport = fs.readFileSync(filePath, "utf8")
+                report.source = fs.readFileSync(filePath, "utf8")
             }
         })
     })
@@ -107,5 +118,5 @@ function getPRCoverageReport(files, prFiles) {
 module.exports = {
     parseReports,
     getPRCoverageReport,
-    addHtmlReports
+    addSources: addSources
 };

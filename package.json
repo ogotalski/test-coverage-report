@@ -1,6 +1,6 @@
 {
   "name": "test-coverage-report-action",
-  "version": "0.0.1",
+  "version": "1.2",
   "description": "Github action creates comment with test coverage report in the Pull Request",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "Actions",
     "JavaScript",
     "JaCoCo",
+    "Koven",
     "Test Coverage",
     "Kotlin",
     "Java"
@@ -32,8 +33,7 @@
     "@actions/github": "^4.0.0",
     "@types/jest": "^28.1.6",
     "xml2js": "^0.4.23",
-    "xml2json": "^0.12.0",
-    "jsdom": "^20.0.0"
+    "xml2json": "^0.12.0"
   },
   "devDependencies": {
     "jest": "^28.1.3"

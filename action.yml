@@ -1,12 +1,12 @@
 name: 'Test coverage report'
 description: 'Creates comment with test coverage report in the Pull Request'
 inputs:
-  htmlReports:
-    description: "Comma separated paths of the jacoco html coverage pages"
+  sourcePaths:
+    description: "Comma separated paths of the sources"
     required: true
     default: '1000'
   paths:
-    description: "Comma separated paths of the jacoco xml reports"
+    description: "Comma separated paths of the jacoco / kover xml reports"
     required: true
   token:
     description: "Github personal token to add commits to Pull Request"

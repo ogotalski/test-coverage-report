@@ -1,6 +1,3 @@
-const jsdom = require("jsdom");
-const {JSDOM} = jsdom;
-
 
 function createCommentTitle(title) {
     if (title != null && title.length > 0) {
@@ -20,7 +17,7 @@ function createPRReportPart(prReport) {
     return `#### :inbox_tray: ${prReport.percentage}% of the files changed in pr covered by tests.\n` +
         `---\n ##### Details:\n` +
         prReport.files.map((file) => {
-            let spoiler = file.htmlReport ? renderCoverageDetails(file) : ""
+            let spoiler = file.source ? renderCoverageDetails(file) : ""
             let header = `${file.package}.<b>${file.name}</b> - <b>${file.percentage}%</b>`
             let footer = `[${file.package}.${file.name}](${file.url})`
             let summary = `<details><summary>${header}</summary>\n\n${spoiler}\n${footer}\n\n<hr/></details>\n\n`
@@ -29,30 +26,23 @@ function createPRReportPart(prReport) {
 }
 
 function renderCoverageDetails(file) {
-    let dom = new JSDOM(file.htmlReport)
-    dom.window.document.querySelectorAll("span.nc").forEach((span) => {
-        span.textContent = "- " + span.textContent
-    });
-    dom.window.document.querySelectorAll("span.fc").forEach((span) => {
-        span.textContent = "+ " + span.textContent
-    });
-    dom.window.document.querySelectorAll("span.pc").forEach((span) => {
-        span.textContent = "!" + " " + span.textContent
-    });
-    let pre = dom.window.document.querySelector("pre");
-    return "```diff\n" + addHash(pre.textContent) + "\n```"
+    const content = file.source.split("\n").map((line, index, array) => {
+        let number = " " + pad(index + 1, array.length.toString().length)
+        let status = "#"
+        const fileLine = file.lines.get(index + 1)
+        if (fileLine){
+
+            if (fileLine.mi === 0 && fileLine.mb === 0) status = "+"
+            else if (fileLine.ci != 0 || fileLine.cb != 0) status = "!"
+            else status = "-"
+        }
+        return `${status}${number}: ${line}`
+    }).join("\n");
+
+    return "```diff\n" + content + "\n```"
 }
 
-function addHash(text) {
-    return text.split("\n").map((line, index, array) => {
-        let number = " " + pad(index + 1, array.length.toString().length)
-        if (line.startsWith("+") || line.startsWith("-") || line.startsWith("!")) {
-            return line.replace(line[0], line[0] + number + ": ");
-        } else {
-            return "#" + number + ": " + line;
-        }
-    }).join("\n");
-}
+
 
 function pad(num, size) {
     num = num.toString();
