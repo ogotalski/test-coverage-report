@@ -4,7 +4,7 @@
   <a href="https://github.com/ogotalski/test-coverage-report/actions"><img alt="javscript-action status" src="https://github.com/ogotalski/test-coverage-report/workflows/units-test/badge.svg"></a>
 </p>
 
-Creates comment with test coverage report in the Pull Request based on JaCoCo html and xml reports :rocket:
+Creates comment with test coverage report in the Pull Request based on JaCoCo/Kover xml reports :rocket:
 
 ### Code coverage report
 
@@ -103,7 +103,7 @@ jobs:
         uses: ogotalski/test-coverage-report@v1.0
         with:
           paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
-          htmlReports: ${{ github.workspace }}/build/jacocoHtml,${{ github.workspace }}/MathUtils/build/jacocoHtml
+          sourcePaths: ${{ github.workspace }}/src/main/kotlin,${{ github.workspace }}/MathUtils/src/main/java
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
 See the [actions tab](https://github.com/ogotalski/test/actions) for runs of this action! :rocket:

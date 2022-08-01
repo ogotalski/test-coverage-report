@@ -10,13 +10,13 @@ const {log} = require("./log");
 async function run() {
     try {
         const paths = core.getInput("paths").split(",");
-        const htmlReportsPaths = core.getInput("htmlReports").split(",");
+        const sourcePaths = core.getInput("sourcePaths").split(",");
         const title = core.getInput("title");
         const updateComment = parseBooleans(core.getInput("update-comment"));
         const event = github.context.eventName;
 
         log("reportPaths", paths);
-        log("htmlReports", htmlReportsPaths);
+        log("sourcePaths", sourcePaths);
         log("title", title)
         log("updateComment", updateComment)
 
@@ -32,7 +32,7 @@ async function run() {
         const fullReport = parser.parseReports(reports)
         log("overallCoverage", fullReport.percentage)
 
-        const prReport = parser.addHtmlReports(parser.getPRCoverageReport(fullReport.files, await changedFiles), htmlReportsPaths);
+        const prReport = parser.addSources(parser.getPRCoverageReport(fullReport.files, await changedFiles), sourcePaths);
         log("PR Coverage", prReport);
 
         if (pr != null) {

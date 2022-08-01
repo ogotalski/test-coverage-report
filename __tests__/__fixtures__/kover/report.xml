@@ -1,0 +1,210 @@
+<?xml version="1.0" ?>
+<report name="Intellij Coverage Report">
+<package name="org/test/math/utils">
+<class name="org/test/math/utils/FibonacciForkJoinUtil" sourcefilename="FibonacciForkJoinUtil.java">
+<method name="calc" desc="(J)J">
+<counter type="INSTRUCTION" missed="6" covered="11"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="1"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="6"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="2"/>
+</method>
+<counter type="INSTRUCTION" missed="6" covered="17"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="3"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="org/test/math/utils/FibonacciForkJoinUtil$FibonacciTask" sourcefilename="FibonacciForkJoinUtil.java">
+<method name="compute" desc="()Ljava/lang/Long;">
+<counter type="INSTRUCTION" missed="0" covered="44"/>
+<counter type="BRANCH" missed="0" covered="2"/>
+<counter type="LINE" missed="0" covered="5"/>
+</method>
+<method name="&lt;init&gt;" desc="(Lorg/test/math/utils/FibonacciForkJoinUtil;Ljava/lang/Long;)V">
+<counter type="INSTRUCTION" missed="0" covered="8"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="3"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="52"/>
+<counter type="BRANCH" missed="0" covered="2"/>
+<counter type="LINE" missed="0" covered="8"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="org/test/math/utils/FibonacciLinearUtil" sourcefilename="FibonacciLinearUtil.java">
+<method name="calc" desc="(J)J">
+<counter type="INSTRUCTION" missed="0" covered="29"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="9"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="2"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="31"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="10"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="org/test/math/utils/FibonacciParallelUtil" sourcefilename="FibonacciParallelUtil.java">
+<method name="calc" desc="(J)J">
+<counter type="INSTRUCTION" missed="44" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="6" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="50" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="8" covered="0"/>
+<counter type="METHOD" missed="2" covered="0"/>
+</class>
+<class name="org/test/math/utils/FibonacciRecurUtil" sourcefilename="FibonacciRecurUtil.java">
+<method name="calc" desc="(J)J">
+<counter type="INSTRUCTION" missed="0" covered="36"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="4"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="7"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="2"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="43"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="6"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="org/test/math/utils/MathUtils" sourcefilename="MathUtils.java">
+<method name="fibonacciCalc" desc="(J)Ljava/lang/Long;">
+<counter type="INSTRUCTION" missed="0" covered="6"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="2"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="8"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="2"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<sourcefile name="FibonacciRecurUtil.java">
+<line nr="6" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="8" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="12" mi="0" ci="5" mb="0" cb="2"/>
+<line nr="13" mi="0" ci="6" mb="0" cb="2"/>
+<line nr="15" mi="0" ci="18" mb="0" cb="0"/>
+<line nr="17" mi="0" ci="7" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="0" covered="43"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="6"/>
+</sourcefile>
+<sourcefile name="FibonacciLinearUtil.java">
+<line nr="3" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="6" mi="0" ci="4" mb="0" cb="2"/>
+<line nr="7" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="8" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="9" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="11" mi="0" ci="11" mb="0" cb="2"/>
+<line nr="12" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="13" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="14" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="16" mi="0" ci="1" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="0" covered="31"/>
+<counter type="BRANCH" missed="0" covered="4"/>
+<counter type="LINE" missed="0" covered="10"/>
+</sourcefile>
+<sourcefile name="FibonacciParallelUtil.java">
+<line nr="6" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="8" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="12" mi="5" ci="0" mb="2" cb="0"/>
+<line nr="14" mi="20" ci="0" mb="0" cb="0"/>
+<line nr="15" mi="12" ci="0" mb="0" cb="0"/>
+<line nr="16" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="17" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="18" mi="5" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="50" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="8" covered="0"/>
+</sourcefile>
+<sourcefile name="MathUtils.java">
+<line nr="3" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="7" mi="0" ci="6" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="0" covered="8"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="2"/>
+</sourcefile>
+<sourcefile name="FibonacciForkJoinUtil.java">
+<line nr="5" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="7" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="12" mi="0" ci="11" mb="0" cb="0"/>
+<line nr="13" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="14" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="22" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="23" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="24" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="28" mi="0" ci="8" mb="0" cb="2"/>
+<line nr="29" mi="0" ci="12" mb="0" cb="0"/>
+<line nr="30" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="31" mi="0" ci="12" mb="0" cb="0"/>
+<line nr="32" mi="0" ci="9" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="6" covered="69"/>
+<counter type="BRANCH" missed="0" covered="2"/>
+<counter type="LINE" missed="2" covered="11"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="56" covered="151"/>
+<counter type="BRANCH" missed="2" covered="10"/>
+<counter type="LINE" missed="10" covered="29"/>
+<counter type="METHOD" missed="2" covered="10"/>
+<counter type="CLASS" missed="1" covered="5"/>
+</package>
+<package name="org/test/main">
+<class name="org/test/main/Math" sourcefilename="Math.kt">
+<method name="getFibonacci" desc="(I)J">
+<counter type="INSTRUCTION" missed="4" covered="14"/>
+<counter type="BRANCH" missed="3" covered="1"/>
+<counter type="LINE" missed="3" covered="2"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="2"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="4" covered="16"/>
+<counter type="BRANCH" missed="3" covered="1"/>
+<counter type="LINE" missed="3" covered="3"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<sourcefile name="Math.kt">
+<line nr="6" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="8" mi="0" ci="3" mb="1" cb="1"/>
+<line nr="9" mi="0" ci="11" mb="0" cb="0"/>
+<line nr="10" mi="2" ci="0" mb="2" cb="0"/>
+<line nr="11" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="12" mi="1" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="4" covered="16"/>
+<counter type="BRANCH" missed="3" covered="1"/>
+<counter type="LINE" missed="3" covered="3"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="4" covered="16"/>
+<counter type="BRANCH" missed="3" covered="1"/>
+<counter type="LINE" missed="3" covered="3"/>
+<counter type="METHOD" missed="0" covered="2"/>
+<counter type="CLASS" missed="0" covered="1"/>
+</package>
+<counter type="INSTRUCTION" missed="60" covered="167"/>
+<counter type="BRANCH" missed="5" covered="11"/>
+<counter type="LINE" missed="13" covered="32"/>
+<counter type="METHOD" missed="2" covered="12"/>
+<counter type="CLASS" missed="1" covered="6"/>
+</report>
+
