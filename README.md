@@ -85,7 +85,7 @@ Creates comment with test coverage report in the Pull Request based on JaCoCo/Ko
  <details><summary><kbd>org.test.math.utils.<b>FibonacciRecurUtil.java</b></kbd> - <b>0%</b>  (100%)</summary>
 
 <dl><dd> <details><summary>
- <b>PR:</b> <kbd><b>FibonacciRecurUtil.java#L03-22</b></kbd>
+ <b>PR:</b> <kbd><b>FibonacciRecurUtil.java#L02-22</b></kbd>
 
 ```diff
 # 02: 
@@ -110,7 +110,7 @@ Creates comment with test coverage report in the Pull Request based on JaCoCo/Ko
 ```
 </summary>
 
-<b>Master:</b> <kbd><b>FibonacciRecurUtil.java#L03-22</b></kbd>
+<b>Master:</b> <kbd><b>FibonacciRecurUtil.java#L02-22</b></kbd>
  ```diff
 # 02: 
 # 03: import java.util.HashMap;
@@ -143,14 +143,17 @@ Creates comment with test coverage report in the Pull Request based on JaCoCo/Ko
 
 
 ```yaml
-uses: ogotalski/test-coverage-report@v1.3
-  with:
-    paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
-    sourcePaths: ${{ github.workspace }}/src/main/kotlin,${{ github.workspace }}/MathUtils/src/main/java
-    masterPaths: ${{ github.workspace }}/code-coverage-report/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/code-coverage-report/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
-    token: ${{ secrets.GITHUB_TOKEN }}
-    updateComment: true
-    debug: true
+uses: ogotalski/test-coverage-report@v1.4
+with:
+  paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+  sourcePaths: ${{ github.workspace }}/src/main/kotlin,${{ github.workspace }}/MathUtils/src/main/java
+  masterPaths: ${{ github.workspace }}/code-coverage-report/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/code-coverage-report/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+  token: ${{ secrets.GITHUB_TOKEN }}
+  updateComment: true
+  debug: true
+  artifactWorkflow: main.yml
+  artifactName: code-coverage-report
+  downloadPath: code-coverage-report
 ```
 
 ## Example of workflow
@@ -173,25 +176,8 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew test jacocoTestReport
-      - name: Download artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
-          # Required, if the artifact is from a different repo
-          # Required, if the repo is private a Personal Access Token with `repo` scope is needed
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          # Optional, workflow file name or ID
-          # If not specified, will be inferred from run_id (if run_id is specified), or will be the current workflow
-          workflow: main.yml
-          # Optional, uploaded artifact name,
-          # will download all artifacts if not specified
-          # and extract them into respective subdirectories
-          # https://github.com/actions/download-artifact#download-all-artifacts
-          name: code-coverage-report
-          # Optional, a directory where to extract artifact(s), defaults to the current directory
-          path: code-coverage-report
       - name: Test coverage report
-        uses: ogotalski/test-coverage-report@v1.3
+        uses: ogotalski/test-coverage-report@v1.4
         with:
           paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
           sourcePaths: ${{ github.workspace }}/src/main/kotlin,${{ github.workspace }}/MathUtils/src/main/java
@@ -199,5 +185,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           updateComment: true
           debug: true
+          artifactWorkflow: main.yml
+          artifactName: code-coverage-report
+          downloadPath: code-coverage-report
 ```
 See the [actions tab](https://github.com/ogotalski/test/actions) for runs of this action! :rocket:
