@@ -5,7 +5,16 @@ const xml2js = require("xml2js");
 const {parseBooleans} = require("xml2js/lib/processors");
 const parser = require("./parseReport")
 const githubMarkdown = require("./githubMarkdown")
+const downloader = require("./download")
 const {log} = require("./log");
+
+async function downloadArtifact(client, artifactName) {
+    const [owner, repo] = core.getInput("repo", {required: true}).split("/")
+    const downloadPath = core.getInput("downloadPath", {required: true})
+    const artifactBranch = core.getInput("artifactBranch")
+    const artifactWorkflow = core.getInput("artifactWorkflow", {required: true})
+    return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow)
+}
 
 async function run() {
     try {
@@ -16,6 +25,9 @@ async function run() {
         const title = core.getInput("title");
         const updateComment = parseBooleans(core.getInput("updateComment"));
         const event = github.context.eventName;
+
+       const artifactName = core.getInput("artifactName")
+
 
         log("reportPaths", paths);
         log("sourcePaths", sourcePaths);
@@ -29,7 +41,9 @@ async function run() {
 
         const client = github.getOctokit(core.getInput("token"));
 
-
+        if (artifactName) {
+            let download = await downloadArtifact(client, artifactName);
+        }
         let changedFiles = getChangedFiles(pr, client)
         let masterReports = getReports(masterPaths);
         let reports = await getReports(paths);

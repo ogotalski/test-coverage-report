@@ -93,7 +93,7 @@ function renderPart(part, fileSource, fileLines) {
 
 function renderPartWithMaster(part, file) {
     let end = pad(part.end +1 , (part.end+1).toString().length)
-    let start = pad(part.start +1 , (part.end+1).toString().length)
+    let start = pad(part.start , (part.end+1).toString().length)
     const header = `\n <b>Pull Request:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n\n${renderPart(part, file.source, file.lines)}`
     const spoiler = `<b>Master:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n ${renderPart(part,file.source,file.masterLines)}`
     return `<details><summary>${header}\n</summary>\n\n${spoiler}\n</details>\n\n`
