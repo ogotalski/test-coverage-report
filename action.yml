@@ -8,13 +8,17 @@ inputs:
   paths:
     description: "Comma separated paths of the jacoco / kover xml reports"
     required: true
+  masterPaths:
+    description: "Comma separated paths of the jacoco / kover xml reports from Master (artefact)"
+    required: false
+    default: ""
   token:
     description: "Github personal token to add commits to Pull Request"
     required: true
   title:
     description: "Optional title for the Pull Request comment"
     required: false
-    default: ":scroll: Code coverage report"
+    default: "Code coverage report"
   updateComment:
     description: "Update comment instead of creating new one"
     required: false
