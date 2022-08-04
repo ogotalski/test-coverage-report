@@ -6,7 +6,7 @@ function parseCounter(fileName, packageName, lines) {
     file.name = fileName;
     file.path = `${packageName}/${fileName}`
     file.package = replaceSlash(packageName)
-    file.lines = new Map(lines.map(line=>[line.number,line]))
+    file.lines = new Map(lines.map(line => [line.number, line]))
     let missed = 0
     let covered = 0
     lines.forEach((line) => {
@@ -15,9 +15,9 @@ function parseCounter(fileName, packageName, lines) {
     });
     file.missed = missed;
     file.covered = covered;
-    file.percentage = parseFloat(
+    file.percentage = covered + missed > 0 ? parseFloat(
         ((file.covered / (file.covered + file.missed)) * 100).toFixed(2)
-    );
+    ) : 100;
     return file;
 }
 
@@ -40,9 +40,9 @@ function parseReports(reports) {
         sourceFiles.forEach((sourceFile) => {
             const fileName = sourceFile["$"].name;
             const lines = sourceFile["line"];
-            const fileLines =[]
+            const fileLines = []
             if (lines)
-                lines.forEach((l)=>{
+                lines.forEach((l) => {
                     const line = l["$"]
                     const fileLine = {}
                     fileLine.number = parseInt(line["nr"]);
@@ -115,8 +115,43 @@ function getPRCoverageReport(files, prFiles) {
     return result;
 }
 
+function getDecreaseFileReport(master, pr) {
+    const file = {}
+    file.name = master.name;
+    file.path = master.path
+    file.package = master.package
+    file.masterPercentage = master.percentage
+    file.percentage = pr.percentage
+    let lines = Array.from(pr.lines.values()).filter(prLine => {
+        const masterLine = master.lines.get(prLine.number)
+        if (masterLine) {
+            if (prLine.mi > masterLine.mi || prLine.mb > masterLine.mb)
+                return true
+        }
+        return false
+    });
+    file.lines = new Map(lines.map(line => [line.number, line]))
+    file.masterLines = new Map(lines.filter(line => master.lines.has(line.number))
+        .map(line => [line.number, master.lines.get(line.number)]))
+    return file
+
+}
+
+function getDecreaseReport(fullReport, prReport, masterReport) {
+    const reportFiles = new Map(fullReport.files.map(file => [file.path, file]))
+    const prFiles = new Set(prReport.files.map(file => file.path))
+    const decreaseReport = {}
+    decreaseReport.files = masterReport.files
+        .filter(file => reportFiles.has(file.path))
+        .filter(file => !prFiles.has(file.path))
+        .map(file => getDecreaseFileReport(file, reportFiles.get(file.path)))
+        .filter(file => file.lines.size > 0)
+    return decreaseReport
+}
+
 module.exports = {
     parseReports,
     getPRCoverageReport,
-    addSources: addSources
+    addSources,
+    getDecreaseReport
 };

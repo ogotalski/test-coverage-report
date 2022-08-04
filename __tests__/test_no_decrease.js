@@ -19,7 +19,7 @@ describe("JaCoCo", function () {
             case "paths":
                 return "./__tests__/__fixtures__/report/report.xml,./__tests__/__fixtures__/report2/report.xml";
             case "masterPaths":
-                return null;
+                return "./__tests__/__fixtures__/report/report.xml,./__tests__/__fixtures__/report2/report.xml";
         }
     }
 
@@ -98,10 +98,10 @@ describe("JaCoCo", function () {
 
             expect(createComment.mock.calls[0][0].body)
                 .toEqual("\n" +
-                    "#### :open_file_folder: 39.68% of the overall code covered by tests. \n" +
+                    "#### :open_file_folder: 39.68% of the overall code covered by tests. 39.68% in master\n" +
                     "#### :inbox_tray: 91.43% of the files changed in pull request covered by tests.\n" +
                     "##### Details:\n" +
-                    "<details><summary><kbd>org.test.math.utils.<b>FibonacciRecurUtil.java</b></kbd> - <b>100%</b> </summary>\n" +
+                    "<details><summary><kbd>org.test.math.utils.<b>FibonacciRecurUtil.java</b></kbd> - <b>100%</b>  (100%)</summary>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
@@ -129,7 +129,7 @@ describe("JaCoCo", function () {
                     "\n" +
                     "<hr/></details>\n" +
                     "\n" +
-                    "<details><summary><kbd>org.test.main.<b>Math.kt</b></kbd> - <b>75%</b> </summary>\n" +
+                    "<details><summary><kbd>org.test.main.<b>Math.kt</b></kbd> - <b>75%</b>  (75%)</summary>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.main\n" +
@@ -168,7 +168,7 @@ describe("Kover", function () {
             case "paths":
                 return "./__tests__/__fixtures__/kover/report.xml";
             case "masterPaths":
-                return "";
+                return "./__tests__/__fixtures__/kover/report.xml";
         }
     }
 
@@ -247,10 +247,10 @@ describe("Kover", function () {
 
             expect(createComment.mock.calls[0][0].body)
                 .toEqual("\n" +
-                    "#### :open_file_folder: 73.57% of the overall code covered by tests. \n" +
+                    "#### :open_file_folder: 73.57% of the overall code covered by tests. 73.57% in master\n" +
                     "#### :inbox_tray: 93.65% of the files changed in pull request covered by tests.\n" +
                     "##### Details:\n" +
-                    "<details><summary><kbd>org.test.math.utils.<b>FibonacciRecurUtil.java</b></kbd> - <b>100%</b> </summary>\n" +
+                    "<details><summary><kbd>org.test.math.utils.<b>FibonacciRecurUtil.java</b></kbd> - <b>100%</b>  (100%)</summary>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
@@ -278,7 +278,7 @@ describe("Kover", function () {
                     "\n" +
                     "<hr/></details>\n" +
                     "\n" +
-                    "<details><summary><kbd>org.test.main.<b>Math.kt</b></kbd> - <b>80%</b> </summary>\n" +
+                    "<details><summary><kbd>org.test.main.<b>Math.kt</b></kbd> - <b>80%</b>  (80%)</summary>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.main\n" +

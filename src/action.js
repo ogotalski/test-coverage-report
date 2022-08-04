@@ -11,32 +11,38 @@ async function run() {
     try {
         const paths = core.getInput("paths").split(",");
         const sourcePaths = core.getInput("sourcePaths").split(",");
+        let masterPathProperty = core.getInput("masterPaths");
+        const masterPaths = masterPathProperty ? masterPathProperty.split(",") : [];
         const title = core.getInput("title");
-        const updateComment = parseBooleans(core.getInput("update-comment"));
+        const updateComment = parseBooleans(core.getInput("updateComment"));
         const event = github.context.eventName;
 
         log("reportPaths", paths);
         log("sourcePaths", sourcePaths);
+        log("masterPaths", masterPaths);
         log("title", title)
         log("updateComment", updateComment)
 
         log("Event", event);
 
         const pr = getPr(event)
+
         const client = github.getOctokit(core.getInput("token"));
 
 
         let changedFiles = getChangedFiles(pr, client)
+        let masterReports = getReports(masterPaths);
         let reports = await getReports(paths);
         log("reports", reports)
         const fullReport = parser.parseReports(reports)
         log("overallCoverage", fullReport.percentage)
 
-        const prReport = parser.addSources(parser.getPRCoverageReport(fullReport.files, await changedFiles), sourcePaths);
+        const prReport = parser.addSources(parser.getPRCoverageReport(fullReport.files, await changedFiles), sourcePaths)
         log("PR Coverage", prReport);
-
+        let masterReport = parser.parseReports(await masterReports)
+        const prMasterDecreaseReport = parser.addSources(parser.getDecreaseReport(fullReport, prReport, masterReport), sourcePaths)
         if (pr != null) {
-            await postComment(pr.number, updateComment, githubMarkdown.createCommentTitle(title), githubMarkdown.createCommentBody(title, fullReport, prReport), client);
+            await postComment(pr.number, updateComment, githubMarkdown.createCommentTitle(title), githubMarkdown.createCommentBody(title, fullReport, prReport, masterReport, prMasterDecreaseReport), client);
         }
     } catch (error) {
         core.setFailed(error);
