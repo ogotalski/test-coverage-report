@@ -158,7 +158,7 @@ describe("Kover vs JaCoCo", function () {
                     " <details><summary><kbd>org.test.math.utils.<b>MathUtils.java</b></kbd> - <b>0%</b>  (100%)</summary>\n" +
                     "\n" +
                     "<dl><dd> <details><summary>\n" +
-                    " <b>Pull Request:</b> <kbd><b>MathUtils.java#L01-12</b></kbd>\n" +
+                    " <b>Pull Request:</b> <kbd><b>MathUtils.java#L00-12</b></kbd>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
@@ -174,7 +174,7 @@ describe("Kover vs JaCoCo", function () {
                     "```\n" +
                     "</summary>\n" +
                     "\n" +
-                    "<b>Master:</b> <kbd><b>MathUtils.java#L01-12</b></kbd>\n" +
+                    "<b>Master:</b> <kbd><b>MathUtils.java#L00-12</b></kbd>\n" +
                     " ```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
                     "# 02: \n" +
@@ -198,7 +198,7 @@ describe("Kover vs JaCoCo", function () {
                     "<details><summary><kbd>org.test.math.utils.<b>FibonacciForkJoinUtil.java</b></kbd> - <b>0%</b>  (92%)</summary>\n" +
                     "\n" +
                     "<dl><dd> <details><summary>\n" +
-                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L02-12</b></kbd>\n" +
+                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L01-12</b></kbd>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
@@ -215,7 +215,7 @@ describe("Kover vs JaCoCo", function () {
                     "```\n" +
                     "</summary>\n" +
                     "\n" +
-                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L02-12</b></kbd>\n" +
+                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L01-12</b></kbd>\n" +
                     " ```diff\n" +
                     "# 01: package org.test.math.utils;\n" +
                     "# 02: \n" +
@@ -233,7 +233,7 @@ describe("Kover vs JaCoCo", function () {
                     "\n" +
                     " </dd>\n" +
                     "<dd> <details><summary>\n" +
-                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L09-17</b></kbd>\n" +
+                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L08-17</b></kbd>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 08: \n" +
@@ -248,7 +248,7 @@ describe("Kover vs JaCoCo", function () {
                     "```\n" +
                     "</summary>\n" +
                     "\n" +
-                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L09-17</b></kbd>\n" +
+                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L08-17</b></kbd>\n" +
                     " ```diff\n" +
                     "# 08: \n" +
                     "# 09:     @Override\n" +
@@ -264,7 +264,7 @@ describe("Kover vs JaCoCo", function () {
                     "\n" +
                     " </dd>\n" +
                     "<dd> <details><summary>\n" +
-                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L19-37</b></kbd>\n" +
+                    " <b>Pull Request:</b> <kbd><b>FibonacciForkJoinUtil.java#L18-37</b></kbd>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 18:     private class FibonacciTask extends RecursiveTask<Long>\n" +
@@ -289,7 +289,7 @@ describe("Kover vs JaCoCo", function () {
                     "```\n" +
                     "</summary>\n" +
                     "\n" +
-                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L19-37</b></kbd>\n" +
+                    "<b>Master:</b> <kbd><b>FibonacciForkJoinUtil.java#L18-37</b></kbd>\n" +
                     " ```diff\n" +
                     "# 18:     private class FibonacciTask extends RecursiveTask<Long>\n" +
                     "# 19:     {\n" +
@@ -322,7 +322,7 @@ describe("Kover vs JaCoCo", function () {
                     "<details><summary><kbd>org.test.math.utils.<b>FibonacciParallelUtil.java</b></kbd> - <b>0%</b>  (0%)</summary>\n" +
                     "\n" +
                     "<dl><dd> <details><summary>\n" +
-                    " <b>Pull Request:</b> <kbd><b>FibonacciParallelUtil.java#L05-22</b></kbd>\n" +
+                    " <b>Pull Request:</b> <kbd><b>FibonacciParallelUtil.java#L04-22</b></kbd>\n" +
                     "\n" +
                     "```diff\n" +
                     "# 04: import java.util.concurrent.Executors;\n" +
@@ -346,7 +346,7 @@ describe("Kover vs JaCoCo", function () {
                     "```\n" +
                     "</summary>\n" +
                     "\n" +
-                    "<b>Master:</b> <kbd><b>FibonacciParallelUtil.java#L05-22</b></kbd>\n" +
+                    "<b>Master:</b> <kbd><b>FibonacciParallelUtil.java#L04-22</b></kbd>\n" +
                     " ```diff\n" +
                     "# 04: import java.util.concurrent.Executors;\n" +
                     "# 05: \n" +
