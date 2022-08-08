@@ -24,6 +24,7 @@ function parseCounter (fileName, packageName, lines) {
 }
 
 function parseReports (reports) {
+  reports = reports.filter(report => report)
   const packages = [].concat(...reports.map((report) => report.report).map((report) => report.package))
   const result = {}
   const resultFiles = []

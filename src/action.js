@@ -42,7 +42,9 @@ async function run () {
 
     if (artifactName) {
       await downloadArtifact(client, artifactName)
+
     }
+
     const changedFiles = getChangedFiles(pr, client)
     const masterReports = getReports(masterPaths)
     const reports = await getReports(paths)
@@ -79,11 +81,15 @@ function getPr (event) {
   log('pr', pr)
   return pr
 }
+// check if file exist
 
 async function getReports (xmlPaths) {
   return Promise.all(xmlPaths.map(async (xmlPath) => {
-    const reportXml = await fs.promises.readFile(xmlPath.trim(), 'utf-8')
-    return await xml2js.parseStringPromise(reportXml)
+    if (fs.existsSync(xmlPath) && fs.statSync(xmlPath).size > 0) {
+      const reportXml = await fs.promises.readFile(xmlPath.trim(), 'utf-8')
+      return await xml2js.parseStringPromise(reportXml)
+    }else
+      return null
   }))
 }
 
