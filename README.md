@@ -150,7 +150,6 @@ with:
   masterPaths: ${{ github.workspace }}/code-coverage-report/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/code-coverage-report/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
   token: ${{ secrets.GITHUB_TOKEN }}
   updateComment: true
-  debug: true
   artifactWorkflow: main.yml
   artifactName: code-coverage-report
   downloadPath: code-coverage-report
@@ -184,7 +183,6 @@ jobs:
           masterPaths: ${{ github.workspace }}/code-coverage-report/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/code-coverage-report/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           updateComment: true
-          debug: true
           artifactWorkflow: main.yml
           artifactName: code-coverage-report
           downloadPath: code-coverage-report
