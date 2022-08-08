@@ -13,7 +13,8 @@ async function downloadArtifact (client, artifactName) {
   const downloadPath = core.getInput('downloadPath', { required: true })
   const artifactBranch = core.getInput('artifactBranch')
   const artifactWorkflow = core.getInput('artifactWorkflow', { required: true })
-  return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow)
+  const allowNotSuccessfulArtifacts = parseBooleans(core.getInput('allowNotSuccessfulArtifacts'))
+  return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow, allowNotSuccessfulArtifacts)
 }
 
 async function run () {
@@ -24,6 +25,7 @@ async function run () {
     const masterPaths = masterPathProperty ? masterPathProperty.split(',') : []
     const title = core.getInput('title')
     const updateComment = parseBooleans(core.getInput('updateComment'))
+    const allowNotSuccessfulArtifacts = parseBooleans(core.getInput('allowNotSuccessfulArtifacts'))
     const event = github.context.eventName
 
     const artifactName = core.getInput('artifactName')
@@ -41,14 +43,13 @@ async function run () {
     const client = github.getOctokit(core.getInput('token'))
 
     if (artifactName) {
-      await downloadArtifact(client, artifactName)
+      await downloadArtifact(client, artifactName, allowNotSuccessfulArtifacts)
 
     }
 
     const changedFiles = getChangedFiles(pr, client)
     const masterReports = getReports(masterPaths)
     const reports = await getReports(paths)
-    log('reports', reports)
     const fullReport = parser.parseReports(reports)
     log('overallCoverage', fullReport.percentage)
 

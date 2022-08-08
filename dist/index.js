@@ -19203,7 +19203,8 @@ async function downloadArtifact (client, artifactName) {
   const downloadPath = core.getInput('downloadPath', { required: true })
   const artifactBranch = core.getInput('artifactBranch')
   const artifactWorkflow = core.getInput('artifactWorkflow', { required: true })
-  return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow)
+  const allowNotSuccessfulArtifacts = parseBooleans(core.getInput('allowNotSuccessfulArtifacts'))
+  return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow, allowNotSuccessfulArtifacts)
 }
 
 async function run () {
@@ -19214,6 +19215,7 @@ async function run () {
     const masterPaths = masterPathProperty ? masterPathProperty.split(',') : []
     const title = core.getInput('title')
     const updateComment = parseBooleans(core.getInput('updateComment'))
+    const allowNotSuccessfulArtifacts = parseBooleans(core.getInput('allowNotSuccessfulArtifacts'))
     const event = github.context.eventName
 
     const artifactName = core.getInput('artifactName')
@@ -19231,14 +19233,13 @@ async function run () {
     const client = github.getOctokit(core.getInput('token'))
 
     if (artifactName) {
-      await downloadArtifact(client, artifactName)
+      await downloadArtifact(client, artifactName, allowNotSuccessfulArtifacts)
 
     }
 
     const changedFiles = getChangedFiles(pr, client)
     const masterReports = getReports(masterPaths)
     const reports = await getReports(paths)
-    log('reports', reports)
     const fullReport = parser.parseReports(reports)
     log('overallCoverage', fullReport.percentage)
 
@@ -19343,7 +19344,7 @@ const pathname = __nccwpck_require__(1017)
 
 const { log } = __nccwpck_require__(1441)
 
-async function downloadArtifact (client, owner, repo, path, name, branch, workflow) {
+async function downloadArtifact (client, owner, repo, path, name, branch, workflow,allowNotSuccessfulArtifacts) {
   try {
     const workflowConclusion = 'success'
 
@@ -19357,7 +19358,7 @@ async function downloadArtifact (client, owner, repo, path, name, branch, workfl
       branch = branch.replace(/^refs\/heads\//, '')
       log('artifact branch', branch)
     }
-    let runID = null
+    let filtered = null
 
     for await (const runs of client.paginate.iterator(client.rest.actions.listWorkflowRuns, {
       owner,
@@ -19368,35 +19369,35 @@ async function downloadArtifact (client, owner, repo, path, name, branch, workfl
     )) {
       for (const run of runs.data) {
         log('run', run)
-        if (workflowConclusion && workflowConclusion !== run.conclusion) {
+
+        if (!allowNotSuccessfulArtifacts && workflowConclusion !== run.conclusion)
           continue
+
+        const artifacts = await client.paginate(client.rest.actions.listWorkflowRunArtifacts, {
+          owner,
+          repo,
+          run_id: run.id
+        })
+        for (const artifact of artifacts) {
+          log('artifact', artifact.name)
         }
-        runID = run.id
-        break
+        const found = artifacts.filter((artifact) => {
+          return artifact.name === name
+        })
+        if (found.length !== 0) {
+          filtered = found
+          break
+        }
       }
-      if (runID) {
+      if (filtered) {
         break
       }
     }
-    log('Run ID', runID)
-    if (!runID) {
+    if (!filtered || filtered.length === 0) {
       throw new Error('no matching workflow run found')
     }
 
-    const artifacts = await client.paginate(client.rest.actions.listWorkflowRunArtifacts, {
-      owner,
-      repo,
-      run_id: runID
-    })
-    for (const artifact of artifacts) {
-      log('artifact', artifact.name)
-    }
-    const filtered = artifacts.filter((artifact) => {
-      return artifact.name === name
-    })
-    if (filtered.length === 0) {
-      throw new Error('no artifacts found')
-    }
+
     for (const artifact of filtered) {
       log('artifact', artifact.id)
       const size = filesize(artifact.size_in_bytes, { base: 10 })
@@ -19568,6 +19569,8 @@ const debug = parseBooleans(core.getInput('debug'))
 
 function log (title, message) {
   if (debug) core.info(`${title}: ${JSON.stringify(message, ' ', 4)}`)
+  else
+    core.debug(`${title}: ${JSON.stringify(message, ' ', 4)}`)
 }
 
 module.exports = {
