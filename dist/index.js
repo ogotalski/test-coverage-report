@@ -19188,143 +19188,146 @@ function wrappy (fn, cb) {
 /***/ 9746:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2810);
-const github = __nccwpck_require__(4176);
-const fs = __nccwpck_require__(7147);
-const xml2js = __nccwpck_require__(2833);
-const {parseBooleans} = __nccwpck_require__(1575);
+const core = __nccwpck_require__(2810)
+const github = __nccwpck_require__(4176)
+const fs = __nccwpck_require__(7147)
+const xml2js = __nccwpck_require__(2833)
+const { parseBooleans } = __nccwpck_require__(1575)
 const parser = __nccwpck_require__(6492)
 const githubMarkdown = __nccwpck_require__(6816)
 const downloader = __nccwpck_require__(4731)
-const {log} = __nccwpck_require__(1441);
+const { log } = __nccwpck_require__(1441)
 
-async function downloadArtifact(client, artifactName) {
-    const [owner, repo] = core.getInput("repo", {required: true}).split("/")
-    const downloadPath = core.getInput("downloadPath", {required: true})
-    const artifactBranch = core.getInput("artifactBranch")
-    const artifactWorkflow = core.getInput("artifactWorkflow", {required: true})
-    return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow)
+async function downloadArtifact (client, artifactName) {
+  const [owner, repo] = core.getInput('repo', { required: true }).split('/')
+  const downloadPath = core.getInput('downloadPath', { required: true })
+  const artifactBranch = core.getInput('artifactBranch')
+  const artifactWorkflow = core.getInput('artifactWorkflow', { required: true })
+  return await downloader.downloadArtifact(client, owner, repo, downloadPath, artifactName, artifactBranch, artifactWorkflow)
 }
 
-async function run() {
-    try {
-        const paths = core.getInput("paths").split(",");
-        const sourcePaths = core.getInput("sourcePaths").split(",");
-        let masterPathProperty = core.getInput("masterPaths");
-        const masterPaths = masterPathProperty ? masterPathProperty.split(",") : [];
-        const title = core.getInput("title");
-        const updateComment = parseBooleans(core.getInput("updateComment"));
-        const event = github.context.eventName;
+async function run () {
+  try {
+    const paths = core.getInput('paths').split(',')
+    const sourcePaths = core.getInput('sourcePaths').split(',')
+    const masterPathProperty = core.getInput('masterPaths')
+    const masterPaths = masterPathProperty ? masterPathProperty.split(',') : []
+    const title = core.getInput('title')
+    const updateComment = parseBooleans(core.getInput('updateComment'))
+    const event = github.context.eventName
 
-       const artifactName = core.getInput("artifactName")
+    const artifactName = core.getInput('artifactName')
 
+    log('reportPaths', paths)
+    log('sourcePaths', sourcePaths)
+    log('masterPaths', masterPaths)
+    log('title', title)
+    log('updateComment', updateComment)
 
-        log("reportPaths", paths);
-        log("sourcePaths", sourcePaths);
-        log("masterPaths", masterPaths);
-        log("title", title)
-        log("updateComment", updateComment)
+    log('Event', event)
 
-        log("Event", event);
+    const pr = getPr(event)
 
-        const pr = getPr(event)
+    const client = github.getOctokit(core.getInput('token'))
 
-        const client = github.getOctokit(core.getInput("token"));
+    if (artifactName) {
+      await downloadArtifact(client, artifactName)
 
-        if (artifactName) {
-            let download = await downloadArtifact(client, artifactName);
-        }
-        let changedFiles = getChangedFiles(pr, client)
-        let masterReports = getReports(masterPaths);
-        let reports = await getReports(paths);
-        log("reports", reports)
-        const fullReport = parser.parseReports(reports)
-        log("overallCoverage", fullReport.percentage)
-
-        const prReport = parser.addSources(parser.getPRCoverageReport(fullReport.files, await changedFiles), sourcePaths)
-        log("PR Coverage", prReport);
-        let masterReport = parser.parseReports(await masterReports)
-        const prMasterDecreaseReport = parser.addSources(parser.getDecreaseReport(fullReport, prReport, masterReport), sourcePaths)
-        if (pr != null) {
-            await postComment(pr.number, updateComment, githubMarkdown.createCommentTitle(title), githubMarkdown.createCommentBody(title, fullReport, prReport, masterReport, prMasterDecreaseReport), client);
-        }
-    } catch (error) {
-        core.setFailed(error);
-    }
-}
-
-function getPr(event) {
-    const pr = {};
-    switch (event) {
-        case "pull_request":
-        case "pull_request_target":
-            let pullRequest = github.context.payload.pull_request;
-            pr.base = pullRequest.base.sha;
-            pr.head = pullRequest.head.sha;
-            pr.number = pullRequest.number;
-            break;
-        default:
-            throw `Only pull requests are supported, ${github.context.eventName} not supported.`;
-    }
-    log("pr", pr)
-    return pr
-}
-
-
-async function getReports(xmlPaths) {
-    return Promise.all(xmlPaths.map(async (xmlPath) => {
-        const reportXml = await fs.promises.readFile(xmlPath.trim(), "utf-8");
-        return await xml2js.parseStringPromise(reportXml);
-    }));
-}
-
-async function getChangedFiles(pr, client) {
-    const req = {
-        base: pr.base, head: pr.head, owner: github.context.repo.owner, repo: github.context.repo.repo,
-    };
-    log("compareCommits req", req)
-    const response = await client.repos.compareCommits(req);
-    const changedFiles = [];
-    response.data.files.forEach((file) => {
-        const changedFile = {
-            filePath: file.filename, url: file.blob_url,
-        };
-        changedFiles.push(changedFile);
-    });
-    log("changedFiles", changedFiles);
-    return changedFiles;
-}
-
-
-async function postComment(number, update, title, body, client) {
-    let updated = false;
-    if (update && title) {
-        const listComments = await client.issues.listComments({
-            issue_number: number, ...github.context.repo,
-        });
-        log("listComments", listComments)
-        const comment = listComments.data.find((comment) => comment.body.startsWith(title),);
-        log("comment", comment)
-        if (comment) {
-            await client.issues.updateComment({
-                comment_id: comment.id, body: body, ...github.context.repo,
-            });
-            updated = true;
-        }
     }
 
-    log("commentUpdated", updated)
+    const changedFiles = getChangedFiles(pr, client)
+    const masterReports = getReports(masterPaths)
+    const reports = await getReports(paths)
+    log('reports', reports)
+    const fullReport = parser.parseReports(reports)
+    log('overallCoverage', fullReport.percentage)
 
-    if (!updated) {
-        await client.issues.createComment({
-            issue_number: number, body: body, ...github.context.repo,
-        });
+    const prReport = parser.addSources(parser.getPRCoverageReport(fullReport.files, await changedFiles), sourcePaths)
+    log('PR Coverage', prReport)
+    const masterReport = parser.parseReports(await masterReports)
+    const prMasterDecreaseReport = parser.addSources(parser.getDecreaseReport(fullReport, prReport, masterReport), sourcePaths)
+    if (pr != null) {
+      await postComment(pr.number, updateComment, githubMarkdown.createCommentTitle(title), githubMarkdown.createCommentBody(title, fullReport, prReport, masterReport, prMasterDecreaseReport), client)
     }
+  } catch (error) {
+    core.setFailed(error)
+  }
 }
 
+function getPr (event) {
+  const pr = {}
+  switch (event) {
+    case 'pull_request':
+    case 'pull_request_target': {
+      const pullRequest = github.context.payload.pull_request
+      pr.base = pullRequest.base.sha
+      pr.head = pullRequest.head.sha
+      pr.number = pullRequest.number
+    }
+      break
+    default:
+      throw `Only pull requests are supported, ${github.context.eventName} not supported.`
+  }
+  log('pr', pr)
+  return pr
+}
+// check if file exist
+
+async function getReports (xmlPaths) {
+  return Promise.all(xmlPaths.map(async (xmlPath) => {
+    if (fs.existsSync(xmlPath) && fs.statSync(xmlPath).size > 0) {
+      const reportXml = await fs.promises.readFile(xmlPath.trim(), 'utf-8')
+      return await xml2js.parseStringPromise(reportXml)
+    }else
+      return null
+  }))
+}
+
+async function getChangedFiles (pr, client) {
+  const req = {
+    base: pr.base, head: pr.head, owner: github.context.repo.owner, repo: github.context.repo.repo
+  }
+  log('compareCommits req', req)
+  const response = await client.repos.compareCommits(req)
+  const changedFiles = []
+  response.data.files.forEach((file) => {
+    const changedFile = {
+      filePath: file.filename, url: file.blob_url
+    }
+    changedFiles.push(changedFile)
+  })
+  log('changedFiles', changedFiles)
+  return changedFiles
+}
+
+async function postComment (number, update, title, body, client) {
+  let updated = false
+  if (update && title) {
+    const listComments = await client.issues.listComments({
+      issue_number: number, ...github.context.repo
+    })
+    log('listComments', listComments)
+    const comment = listComments.data.find((comment) => comment.body.startsWith(title))
+    log('comment', comment)
+    if (comment) {
+      await client.issues.updateComment({
+        comment_id: comment.id, body, ...github.context.repo
+      })
+      updated = true
+    }
+  }
+
+  log('commentUpdated', updated)
+
+  if (!updated) {
+    await client.issues.createComment({
+      issue_number: number, body, ...github.context.repo
+    })
+  }
+}
 
 module.exports = {
-    run
+  run
 }
 
 
@@ -19338,92 +19341,90 @@ const AdmZip = __nccwpck_require__(4834)
 const filesize = __nccwpck_require__(6138)
 const pathname = __nccwpck_require__(1017)
 
-const {log} = __nccwpck_require__(1441);
+const { log } = __nccwpck_require__(1441)
 
-async function downloadArtifact(client, owner, repo, path, name, branch, workflow) {
-    try {
+async function downloadArtifact (client, owner, repo, path, name, branch, workflow) {
+  try {
+    const workflowConclusion = 'success'
 
-        const workflowConclusion = "success"
+    log('owner', owner)
+    log('repo', repo)
+    log('artifact name', name)
+    log('download path', path)
+    log('workflow', workflow)
 
-        log(`owner`, owner)
-        log(`repo`, repo)
-        log(`artifact name`, name)
-        log(`download path`, path)
-        log(`workflow`, workflow)
-
-        if (branch) {
-            branch = branch.replace(/^refs\/heads\//, "")
-            log(`artifact branch`, branch)
-        }
-        let runID = null
-
-        for await (const runs of client.paginate.iterator(client.rest.actions.listWorkflowRuns, {
-                owner: owner,
-                repo: repo,
-                workflow_id: workflow,
-                ...(branch ? {branch} : {}),
-            }
-        )) {
-            for (const run of runs.data) {
-                log("run", run)
-                if (workflowConclusion && workflowConclusion !== run.conclusion) {
-                    continue
-                }
-                runID = run.id
-                break
-            }
-            if (runID) {
-                break
-            }
-        }
-        log(`Run ID`, runID)
-        if (!runID) {
-            throw new Error("no matching workflow run found")
-        }
-
-        let artifacts = await client.paginate(client.rest.actions.listWorkflowRunArtifacts, {
-            owner: owner,
-            repo: repo,
-            run_id: runID,
-        })
-        for (const artifact of artifacts) {
-            log(`artifact`, artifact.name)
-        }
-        const filtered = artifacts.filter((artifact) => {
-            return artifact.name === name
-        })
-        if (filtered.length === 0) {
-            throw new Error("no artifacts found")
-        }
-        for (const artifact of filtered) {
-            log(`artifact`, artifact.id)
-            const size = filesize(artifact.size_in_bytes, {base: 10})
-            log(`downloading`, `${artifact.name}.zip (${size})`)
-            const zip = await client.rest.actions.downloadArtifact({
-                owner: owner,
-                repo: repo,
-                artifact_id: artifact.id,
-                archive_format: "zip",
-            })
-            fs.mkdirSync(path, {recursive: true})
-            const adm = new AdmZip(Buffer.from(zip.data))
-            adm.getEntries().forEach((entry) => {
-                const action = entry.isDirectory ? "creating" : "inflating"
-                const filepath = pathname.join(path, entry.entryName)
-
-                log(` ${action}`, filepath)
-            })
-            adm.extractAllTo(path, true)
-        }
-    } catch (error) {
-        log("Error", error.message)
+    if (branch) {
+      branch = branch.replace(/^refs\/heads\//, '')
+      log('artifact branch', branch)
     }
+    let runID = null
+
+    for await (const runs of client.paginate.iterator(client.rest.actions.listWorkflowRuns, {
+      owner,
+      repo,
+      workflow_id: workflow,
+      ...(branch ? { branch } : {})
+    }
+    )) {
+      for (const run of runs.data) {
+        log('run', run)
+        if (workflowConclusion && workflowConclusion !== run.conclusion) {
+          continue
+        }
+        runID = run.id
+        break
+      }
+      if (runID) {
+        break
+      }
+    }
+    log('Run ID', runID)
+    if (!runID) {
+      throw new Error('no matching workflow run found')
+    }
+
+    const artifacts = await client.paginate(client.rest.actions.listWorkflowRunArtifacts, {
+      owner,
+      repo,
+      run_id: runID
+    })
+    for (const artifact of artifacts) {
+      log('artifact', artifact.name)
+    }
+    const filtered = artifacts.filter((artifact) => {
+      return artifact.name === name
+    })
+    if (filtered.length === 0) {
+      throw new Error('no artifacts found')
+    }
+    for (const artifact of filtered) {
+      log('artifact', artifact.id)
+      const size = filesize(artifact.size_in_bytes, { base: 10 })
+      log('downloading', `${artifact.name}.zip (${size})`)
+      const zip = await client.rest.actions.downloadArtifact({
+        owner,
+        repo,
+        artifact_id: artifact.id,
+        archive_format: 'zip'
+      })
+      fs.mkdirSync(path, { recursive: true })
+      const adm = new AdmZip(Buffer.from(zip.data))
+      adm.getEntries().forEach((entry) => {
+        const action = entry.isDirectory ? 'creating' : 'inflating'
+        const filepath = pathname.join(path, entry.entryName)
+
+        log(` ${action}`, filepath)
+      })
+      adm.extractAllTo(path, true)
+    }
+  } catch (error) {
+    log('Error', error.message)
+  }
 }
 
 module.exports = {
-    downloadArtifact
+  downloadArtifact
 }
-
 
 
 /***/ }),
@@ -19431,317 +19432,302 @@ module.exports = {
 /***/ 6816:
 /***/ ((module) => {
 
-function createCommentTitle(title) {
-    if (title != null && title.length > 0) {
-        return "### " + title + `\n`;
-    } else {
-        return "";
-    }
+function createCommentTitle (title) {
+  if (title != null && title.length > 0) {
+    return '### ' + title + '\n'
+  } else {
+    return ''
+  }
 }
 
-function createTotalPercentagePart(fullReport, masterReport) {
-    let masterCoverage = masterReport && masterReport.files.length > 0 ? `${masterReport.percentage}% in master` : "";
-    return `#### :open_file_folder: ${fullReport.percentage}% of the overall code covered by tests. ${masterCoverage}`;
+function createTotalPercentagePart (fullReport, masterReport) {
+  const masterCoverage = masterReport && masterReport.files.length > 0 ? `${masterReport.percentage}% in master` : ''
+  return `#### :open_file_folder: ${fullReport.percentage}% of the overall code covered by tests. ${masterCoverage}`
 }
 
-function createPRReportPart(prReport, masterReport) {
+function createPRReportPart (prReport, masterReport) {
+  if (prReport.files.length === 0) { return 'No files that require code coverage in this PR' }
 
-    if (prReport.files.length == 0)
-        return "No files that require code coverage in this PR"
+  const masterFiles = new Map(masterReport.files.map(file => [file.path, file]))
 
-    const masterFiles = new Map(masterReport.files.map(file => [file.path, file]))
-
-    return `#### :inbox_tray: ${prReport.percentage}% of the files changed in pull request covered by tests.\n` +
-        `##### Details:\n` +
+  return `#### :inbox_tray: ${prReport.percentage}% of the files changed in pull request covered by tests.\n` +
+        '##### Details:\n' +
         prReport.files.map((file) => {
-            const masterCoverage = masterFiles.has(file.path) ? ` (${masterFiles.get(file.path).percentage}%)` : ""
-            let spoiler = file.source ? renderCoverageDetails(file) : ""
-            let header = `<kbd>${file.package}.<b>${file.name}</b></kbd> - <b>${file.percentage}%</b> ${masterCoverage}`
-            let footer = `[${file.package}.${file.name}](${file.url})`
-            let summary = `<details><summary>${header}</summary>\n\n${spoiler}\n${footer}\n\n<hr/></details>\n\n`
-            return summary
-        }).join("")
+          const masterCoverage = masterFiles.has(file.path) ? ` (${masterFiles.get(file.path).percentage}%)` : ''
+          const spoiler = file.source ? renderCoverageDetails(file) : ''
+          const header = `<kbd>${file.package}.<b>${file.name}</b></kbd> - <b>${file.percentage}%</b> ${masterCoverage}`
+          const footer = `[${file.package}.${file.name}](${file.url})`
+          const summary = `<details><summary>${header}</summary>\n\n${spoiler}\n${footer}\n\n<hr/></details>\n\n`
+          return summary
+        }).join('')
 }
 
-function renderLine(index, array, filelines, line) {
-    let number = " " + pad(index + 1, array.length.toString().length)
-    let status = "#"
-    const fileLine = filelines.get(index + 1)
-    if (fileLine) {
+function renderLine (index, array, filelines, line) {
+  const number = ' ' + pad(index + 1, array.length.toString().length)
+  let status = '#'
+  const fileLine = filelines.get(index + 1)
+  if (fileLine) {
+    if (fileLine.mi === 0 && fileLine.mb === 0) status = '+'
+    else if (fileLine.ci !== 0 || fileLine.cb !== 0) status = '!'
+    else status = '-'
+  }
+  return `${status}${number}: ${line}`
+}
 
-        if (fileLine.mi === 0 && fileLine.mb === 0) status = "+"
-        else if (fileLine.ci != 0 || fileLine.cb != 0) status = "!"
-        else status = "-"
+function renderCoverageDetails (file) {
+  const content = file.source.split('\n').map((line, index, array) => {
+    return renderLine(index, array, file.lines, line)
+  }).join('\n')
+
+  return '```diff\n' + content + '\n```'
+}
+
+function pad (num, size) {
+  num = num.toString()
+  while (num.length < size) num = '0' + num
+  return num
+}
+
+const offset = 4
+
+function createParts (file) {
+  const parts = []
+  Array.from(file.lines.keys()).sort(function (a, b) {
+    return a - b
+  }).forEach(line => {
+    let part = parts.at(-1)
+    if (part && part.end >= line) {
+      part.end = line + offset
+    } else { part = null }
+    if (!part) {
+      part = {}
+      part.start = line - offset > 0 ? line - offset : 0
+      part.end = line + offset
+      parts.push(part)
     }
-    return `${status}${number}: ${line}`
+  })
+  return parts
 }
 
-function renderCoverageDetails(file) {
-    const content = file.source.split("\n").map((line, index, array) => {
-        return renderLine(index, array, file.lines, line);
-    }).join("\n");
+function renderPart (part, fileSource, fileLines) {
+  const content = fileSource.split('\n').map((line, index, array) => {
+    if (index + 1 >= part.start && index + 1 <= part.end) { return renderLine(index, array, fileLines, line) } else { return null }
+  }).filter(line => line).join('\n')
 
-    return "```diff\n" + content + "\n```"
+  return '```diff\n' + content + '\n```'
 }
 
-
-function pad(num, size) {
-    num = num.toString();
-    while (num.length < size) num = "0" + num;
-    return num;
+function renderPartWithMaster (part, file) {
+  const end = pad(part.end + 1, (part.end + 1).toString().length)
+  const start = pad(part.start, (part.end + 1).toString().length)
+  const header = `\n <b>Pull Request:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n\n${renderPart(part, file.source, file.lines)}`
+  const spoiler = `<b>Master:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n ${renderPart(part, file.source, file.masterLines)}`
+  return `<details><summary>${header}\n</summary>\n\n${spoiler}\n</details>\n\n`
 }
 
-const offset = 4;
-
-function createParts(file) {
-    const parts = []
-    Array.from(file.lines.keys()).sort(function (a, b) {
-        return a - b;
-    }).forEach(line => {
-        let part = parts.at(-1)
-        if (part && part.end >= line) {
-            part.end = line + offset
-        } else
-            part = null
-        if (!part) {
-            part = {}
-            part.start = line - offset > 0 ? line - offset : 0
-            part.end = line + offset
-            parts.push(part)
-        }
-    })
-    return parts
+function renderDecrease (file) {
+  const masterCoverage = ` (${file.masterPercentage}%)`
+  const parts = createParts(file)
+  const spoiler = file.source
+    ? '<dl>' + parts.map(part => renderPartWithMaster(part, file))
+      .map(part => `<dd> ${part} </dd>`).join('\n') + '</dl>'
+    : ''
+  const header = `<kbd>${file.package}.<b>${file.name}</b></kbd> - <b>${file.percentage}%</b> ${masterCoverage}`
+  const footer = file.url ? `[${file.package}.${file.name}](${file.url})` : ''
+  return `<details><summary>${header}</summary>\n\n${spoiler}\n${footer}\n\n<hr/></details>\n\n`
 }
 
-function renderPart(part, fileSource, fileLines) {
-    const content = fileSource.split("\n").map((line, index, array) => {
-        if (index + 1 >= part.start && index + 1 <= part.end)
-            return renderLine(index, array, fileLines, line);
-        else
-            return null
-    }).filter(line => line).join("\n");
-
-    return "```diff\n" + content + "\n```"
+function createDecreasePart (prMasterDecreaseReport) {
+  if (prMasterDecreaseReport.files.length === 0) { return '' }
+  const files = prMasterDecreaseReport.files.map(file => renderDecrease(file)).join('\n')
+  return `<hr/>\n\n### :rotating_light: Code coverage decrease for files outside Pull Request\n ##### Details:\n ${files}\n`
 }
 
-function renderPartWithMaster(part, file) {
-    let end = pad(part.end +1 , (part.end+1).toString().length)
-    let start = pad(part.start , (part.end+1).toString().length)
-    const header = `\n <b>Pull Request:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n\n${renderPart(part, file.source, file.lines)}`
-    const spoiler = `<b>Master:</b> <kbd><b>${file.name}#L${start}-${end}</b></kbd>\n ${renderPart(part,file.source,file.masterLines)}`
-    return `<details><summary>${header}\n</summary>\n\n${spoiler}\n</details>\n\n`
-}
-
-function renderDecrease(file) {
-
-    const masterCoverage = ` (${file.masterPercentage}%)`
-    let parts = createParts(file);
-    let spoiler = file.source ? "<dl>" + parts.map(part => renderPartWithMaster(part, file)).
-        map(part=> `<dd> ${part} </dd>`).join("\n") + "</dl>": ""
-    let header = `<kbd>${file.package}.<b>${file.name}</b></kbd> - <b>${file.percentage}%</b> ${masterCoverage}`
-    let footer = file.url ? `[${file.package}.${file.name}](${file.url})` : ""
-    return `<details><summary>${header}</summary>\n\n${spoiler}\n${footer}\n\n<hr/></details>\n\n`
-}
-
-function createDecreasePart(prMasterDecreaseReport) {
-    if (prMasterDecreaseReport.files.length == 0)
-        return ""
-    const files = prMasterDecreaseReport.files.map(file => renderDecrease(file)).join("\n")
-    return `<hr/>\n\n### :rotating_light: Code coverage decrease for files outside Pull Request\n ##### Details:\n ${files}\n`;
-}
-
-function createCommentBody(title, fullReport, prReport, masterReport, prMasterDecreaseReport) {
-    const header = createCommentTitle(title)
-    const totalPercentagePart = createTotalPercentagePart(fullReport, masterReport)
-    const prReportPart = createPRReportPart(prReport, masterReport)
-    const decreasePart = createDecreasePart(prMasterDecreaseReport)
-    return `${header}\n${totalPercentagePart}\n${prReportPart}${decreasePart}`
+function createCommentBody (title, fullReport, prReport, masterReport, prMasterDecreaseReport) {
+  const header = createCommentTitle(title)
+  const totalPercentagePart = createTotalPercentagePart(fullReport, masterReport)
+  const prReportPart = createPRReportPart(prReport, masterReport)
+  const decreasePart = createDecreasePart(prMasterDecreaseReport)
+  return `${header}\n${totalPercentagePart}\n${prReportPart}${decreasePart}`
 }
 
 module.exports = {
-    createCommentTitle,
-    createCommentBody
+  createCommentTitle,
+  createCommentBody
 }
+
 
 /***/ }),
 
 /***/ 1441:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {parseBooleans} = __nccwpck_require__(1575);
-const core = __nccwpck_require__(2810);
-const debug = parseBooleans(core.getInput("debug"));
+const { parseBooleans } = __nccwpck_require__(1575)
+const core = __nccwpck_require__(2810)
+const debug = parseBooleans(core.getInput('debug'))
 
-function log(title, message){
-    if (debug) core.info(`${title}: ${JSON.stringify(message, " ", 4)}`)
+function log (title, message) {
+  if (debug) core.info(`${title}: ${JSON.stringify(message, ' ', 4)}`)
 }
 
 module.exports = {
-    log
+  log
 }
+
 
 /***/ }),
 
 /***/ 6492:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const fs = __nccwpck_require__(7147);
-const {log} = __nccwpck_require__(1441);
+const fs = __nccwpck_require__(7147)
+const { log } = __nccwpck_require__(1441)
 
-function parseCounter(fileName, packageName, lines) {
-    const file = {}
-    file.name = fileName;
-    file.path = `${packageName}/${fileName}`
-    file.package = replaceSlash(packageName)
-    file.lines = new Map(lines.map(line => [line.number, line]))
-    let missed = 0
-    let covered = 0
-    lines.forEach((line) => {
-        missed += line.mi;
-        covered += line.ci;
-    });
-    file.missed = missed;
-    file.covered = covered;
-    file.percentage = covered + missed > 0 ? parseFloat(
-        ((file.covered / (file.covered + file.missed)) * 100).toFixed(2)
-    ) : 100;
-    return file;
+function parseCounter (fileName, packageName, lines) {
+  const file = {}
+  file.name = fileName
+  file.path = `${packageName}/${fileName}`
+  file.package = replaceSlash(packageName)
+  file.lines = new Map(lines.map(line => [line.number, line]))
+  let missed = 0
+  let covered = 0
+  lines.forEach((line) => {
+    missed += line.mi
+    covered += line.ci
+  })
+  file.missed = missed
+  file.covered = covered
+  file.percentage = covered + missed > 0
+    ? parseFloat(
+      ((file.covered / (file.covered + file.missed)) * 100).toFixed(2)
+    )
+    : 100
+  return file
 }
 
-function merge(file, old) {
-    file.missed += old.missed;
-    file.covered += old.covered;
-    file.percentage = parseFloat(
-        ((file.covered / (file.covered + file.missed)) * 100).toFixed(2)
-    );
-}
-
-
-function parseReports(reports) {
-    const packages = [].concat(...reports.map((report) => report["report"]).map((report) => report["package"]))
-    const result = {};
-    const resultFiles = [];
-    packages.forEach((item) => {
-        const packageName = item["$"].name;
-        const sourceFiles = item.sourcefile;
-        sourceFiles.forEach((sourceFile) => {
-            const fileName = sourceFile["$"].name;
-            const lines = sourceFile["line"];
-            const fileLines = []
-            if (lines)
-                lines.forEach((l) => {
-                    const line = l["$"]
-                    const fileLine = {}
-                    fileLine.number = parseInt(line["nr"]);
-                    fileLine.mi = parseInt(line["mi"]);
-                    fileLine.ci = parseInt(line["ci"]);
-                    fileLine.mb = parseInt(line["mb"]);
-                    fileLine.cb = parseInt(line["cb"]);
-                    fileLines.push(fileLine)
-                })
-            const file = parseCounter(fileName, packageName, fileLines);
-            resultFiles.push(file);
-        });
-    });
-    result.files = resultFiles
-    if (result.files.length != 0) {
-        result.files.sort((a, b) => b.percentage - a.percentage);
-        result.percentage = getTotalPercentage(result.files);
-    } else {
-        result.percentage = 100;
-    }
-    return result;
-}
-
-function fileExists(filePath) {
-    return fs.existsSync(filePath) && fs.statSync(filePath).size > 0;
-}
-
-
-function addSources(reports, sourcePaths) {
-    reports.files.map((report) => {
-        sourcePaths.forEach((sourcePath) => {
-            let filePath = `${sourcePath}/${report.path}`;
-
-            let fileExists1 = fileExists(filePath);
-            log(`file: ${filePath} - ${fileExists1}`)
-            if (fileExists1) {
-                report.source = fs.readFileSync(filePath, "utf8")
-            }
+function parseReports (reports) {
+  reports = reports.filter(report => report)
+  const packages = [].concat(...reports.map((report) => report.report).map((report) => report.package))
+  const result = {}
+  const resultFiles = []
+  packages.forEach((item) => {
+    const packageName = item.$.name
+    const sourceFiles = item.sourcefile
+    sourceFiles.forEach((sourceFile) => {
+      const fileName = sourceFile.$.name
+      const lines = sourceFile.line
+      const fileLines = []
+      if (lines) {
+        lines.forEach((l) => {
+          const line = l.$
+          const fileLine = {}
+          fileLine.number = parseInt(line.nr)
+          fileLine.mi = parseInt(line.mi)
+          fileLine.ci = parseInt(line.ci)
+          fileLine.mb = parseInt(line.mb)
+          fileLine.cb = parseInt(line.cb)
+          fileLines.push(fileLine)
         })
+      }
+      const file = parseCounter(fileName, packageName, fileLines)
+      resultFiles.push(file)
     })
-    return reports
-}
-
-
-function getTotalPercentage(files) {
-    var missed = 0;
-    var covered = 0;
-    files.forEach((file) => {
-        missed += file.missed;
-        covered += file.covered;
-    });
-    return parseFloat(((covered / (covered + missed)) * 100).toFixed(2));
-}
-
-
-function replaceSlash(str) {
-    return str.replace(/\//g, ".");
-}
-
-function getPRCoverageReport(files, prFiles) {
-    const result = {}
-    result.files = files.map((file) => {
-        const prFile = prFiles.find(function (f) {
-            return f.filePath.endsWith(file.path);
-        });
-        if (prFile != null) file.url = prFile.url
-        return file
-    }).filter(file => file.url !== undefined)
+  })
+  result.files = resultFiles
+  if (result.files.length !== 0) {
+    result.files.sort((a, b) => b.percentage - a.percentage)
     result.percentage = getTotalPercentage(result.files)
-    return result;
+  } else {
+    result.percentage = 100
+  }
+  return result
 }
 
-function getDecreaseFileReport(master, pr) {
-    const file = {}
-    file.name = master.name;
-    file.path = master.path
-    file.package = master.package
-    file.masterPercentage = master.percentage
-    file.percentage = pr.percentage
-    let lines = Array.from(pr.lines.values()).filter(prLine => {
-        const masterLine = master.lines.get(prLine.number)
-        if (masterLine) {
-            if (prLine.mi > masterLine.mi || prLine.mb > masterLine.mb)
-                return true
-        }
-        return false
-    });
-    file.lines = new Map(lines.map(line => [line.number, line]))
-    file.masterLines = new Map(lines.filter(line => master.lines.has(line.number))
-        .map(line => [line.number, master.lines.get(line.number)]))
+function fileExists (filePath) {
+  return fs.existsSync(filePath) && fs.statSync(filePath).size > 0
+}
+
+function addSources (reports, sourcePaths) {
+  reports.files.forEach((report) => {
+    sourcePaths.forEach((sourcePath) => {
+      const filePath = `${sourcePath}/${report.path}`
+
+      const fileExists1 = fileExists(filePath)
+      log(`file: ${filePath} - ${fileExists1}`)
+      if (fileExists1) {
+        report.source = fs.readFileSync(filePath, 'utf8')
+      }
+    })
+  })
+  return reports
+}
+
+function getTotalPercentage (files) {
+  let missed = 0
+  let covered = 0
+  files.forEach((file) => {
+    missed += file.missed
+    covered += file.covered
+  })
+  return parseFloat(((covered / (covered + missed)) * 100).toFixed(2))
+}
+
+function replaceSlash (str) {
+  return str.replace(/\//g, '.')
+}
+
+function getPRCoverageReport (files, prFiles) {
+  const result = {}
+  result.files = files.map((file) => {
+    const prFile = prFiles.find(function (f) {
+      return f.filePath.endsWith(file.path)
+    })
+    if (prFile != null) file.url = prFile.url
     return file
-
+  }).filter(file => file.url !== undefined)
+  result.percentage = getTotalPercentage(result.files)
+  return result
 }
 
-function getDecreaseReport(fullReport, prReport, masterReport) {
-    const reportFiles = new Map(fullReport.files.map(file => [file.path, file]))
-    const prFiles = new Set(prReport.files.map(file => file.path))
-    const decreaseReport = {}
-    decreaseReport.files = masterReport.files
-        .filter(file => reportFiles.has(file.path))
-        .filter(file => !prFiles.has(file.path))
-        .map(file => getDecreaseFileReport(file, reportFiles.get(file.path)))
-        .filter(file => file.lines.size > 0)
-    return decreaseReport
+function getDecreaseFileReport (master, pr) {
+  const file = {}
+  file.name = master.name
+  file.path = master.path
+  file.package = master.package
+  file.masterPercentage = master.percentage
+  file.percentage = pr.percentage
+  const lines = Array.from(pr.lines.values()).filter(prLine => {
+    const masterLine = master.lines.get(prLine.number)
+    if (masterLine) {
+      if (prLine.mi > masterLine.mi || prLine.mb > masterLine.mb) { return true }
+    }
+    return false
+  })
+  file.lines = new Map(lines.map(line => [line.number, line]))
+  file.masterLines = new Map(lines.filter(line => master.lines.has(line.number))
+    .map(line => [line.number, master.lines.get(line.number)]))
+  return file
+}
+
+function getDecreaseReport (fullReport, prReport, masterReport) {
+  const reportFiles = new Map(fullReport.files.map(file => [file.path, file]))
+  const prFiles = new Set(prReport.files.map(file => file.path))
+  const decreaseReport = {}
+  decreaseReport.files = masterReport.files
+    .filter(file => reportFiles.has(file.path))
+    .filter(file => !prFiles.has(file.path))
+    .map(file => getDecreaseFileReport(file, reportFiles.get(file.path)))
+    .filter(file => file.lines.size > 0)
+  return decreaseReport
 }
 
 module.exports = {
-    parseReports,
-    getPRCoverageReport,
-    addSources,
-    getDecreaseReport
-};
+  parseReports,
+  getPRCoverageReport,
+  addSources,
+  getDecreaseReport
+}
+
 
 /***/ }),
 
@@ -19946,12 +19932,12 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const core = __nccwpck_require__(2810);
-const action = __nccwpck_require__(9746);
+const core = __nccwpck_require__(2810)
+const action = __nccwpck_require__(9746)
 
 action.run().catch(error => {
-    core.setFailed(error.message);
-});
+  core.setFailed(error.message)
+})
 
 })();
 
