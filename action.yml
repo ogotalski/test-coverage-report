@@ -13,7 +13,7 @@ inputs:
     required: false
     default: ""
   token:
-    description: "Github personal token to add commits to Pull Request"
+    description: "Github personal token to add comments to Pull Request"
     required: false
     default: ${{github.token}}
   title:
@@ -22,6 +22,10 @@ inputs:
     default: "Code coverage report"
   updateComment:
     description: "Update comment instead of creating new one"
+    required: false
+    default: "true"
+  allowNotSuccessfulArtifacts:
+    description: "Allow usage non successful job artifacts"
     required: false
     default: "true"
   debug:
