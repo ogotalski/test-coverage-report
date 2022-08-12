@@ -4,6 +4,8 @@ const debug = parseBooleans(core.getInput('debug'))
 
 function log (title, message) {
   if (debug) core.info(`${title}: ${JSON.stringify(message, ' ', 4)}`)
+  else
+    core.debug(`${title}: ${JSON.stringify(message, ' ', 4)}`)
 }
 
 module.exports = {

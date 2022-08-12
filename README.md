@@ -145,14 +145,26 @@ Creates comment with test coverage report in the Pull Request based on JaCoCo/Ko
 ```yaml
 uses: ogotalski/test-coverage-report@v1.4
 with:
+  # Comma separated paths of the jacoco / kover xml reports
   paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+  # Comma separated paths of the sources
   sourcePaths: ${{ github.workspace }}/src/main/kotlin,${{ github.workspace }}/MathUtils/src/main/java
+  # (Optional) Comma separated paths of the jacoco / kover xml reports from Master (artefact)
   masterPaths: ${{ github.workspace }}/code-coverage-report/build/reports/jacoco/test/jacocoTestReport.xml,${{ github.workspace }}/code-coverage-report/MathUtils/build/reports/jacoco/test/jacocoTestReport.xml
+  # (Optional) Github personal token to add comments to Pull Request
   token: ${{ secrets.GITHUB_TOKEN }}
+  # (Optional) Update comment instead of creating new one
   updateComment: true
+  # (Optional) Master artifact workflow name
   artifactWorkflow: main.yml
+  # (Optional) Master artifact name
   artifactName: code-coverage-report
+  # (Optional) Where to unpack the artifact
   downloadPath: code-coverage-report
+  # (Optional) Title for the Pull Request comment
+  title: Code coverage report
+  # (Optional) Master artifact branch name
+  artifactBranch: master
 ```
 
 ## Example of workflow
