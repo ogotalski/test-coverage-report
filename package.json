@@ -31,7 +31,7 @@
   "homepage": "https://github.com/ogotalski/test-coverage-report#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
+    "@actions/github": "^5.1.1",
     "@types/jest": "^28.1.6",
     "adm-zip": "^0.5.9",
     "filesize": "^8.0.7",
